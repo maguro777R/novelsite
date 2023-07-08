@@ -1,0 +1,46 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>Django Girls blog</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    </head>
+    <body>
+        <header>
+            <div class="page-header">
+                <h1><a href="/">AIフィクションズ</a></h1>
+            </div>
+        </header>
+        <nav class="">
+            <div>ホーム</div>
+            <div>ブックマーク</div>
+            <div>閲覧履歴</div>
+            <div>ランキング</div>
+            <div>作品検索</div>
+            <div>作品投稿</div>
+            <div><a href="#">ログイン</a></div>
+            <div>新規登録</div>
+            <div>マイページ</div>
+        </nav>   
+
+        <main>
+            <div class="content container">
+                <div class="row">
+                    <div class="col-md-8">
+                      {% block content %}
+                      {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div>このサイトについて</div>
+            <div>利用規約</div>
+            <div>プライバシーポリシー</div>
+            <div>ヘルプ</div>
+        </footer>
+    </body>
+</html>
