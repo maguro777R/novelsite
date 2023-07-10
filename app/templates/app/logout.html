@@ -1,0 +1,9 @@
+{% extends 'app/base.html' %}
+{% block title %}ログアウト{% endblock %}
+
+{% block content %}
+<body>
+    <p>ログアウトしました...</p><br>
+    再度ログインする場合は<a href="{% url 'login' %}">コチラ</a>から実施してください
+</body>
+{% endblock %}

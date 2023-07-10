@@ -1,7 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.http.response import HttpResponseRedirect
+from django.views.generic import TemplateView, CreateView, FormView
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, SignUpForm, LoginForm, UserChangeForm
 
 def post_new(request):
     if request.method == "POST":
@@ -37,3 +44,86 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'app/post_edit.html', {'form': form})
+
+class SignUpView(CreateView):
+    form_class = SignUpForm
+    template_name = "app/signup.html"
+    success_url = reverse_lazy("post_list")
+
+    def from_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        self.object = user
+        return HttpResponseRedirect(self.get_success_url())
+    
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(to='user')
+    else:
+        form = SignUpForm()
+    param = {
+        'form': form
+    }
+    return render(request, 'app/signup.html', param)
+
+def login_view(request):
+    if request.method == 'POST':
+        next = request.POST.get('next')
+        form = LoginForm(request, data=request.POST)
+
+        if form.is_valid():
+            user = form.get_user()
+
+            if user:
+                login(request, user)
+                if next == 'None':
+                    return redirect(to='/user/')
+                else:
+                    return redirect(to=next)
+    else:
+        form = LoginForm()
+        next = request.GET.get('next')
+
+    param = {
+        'form': form,
+        'next': next
+    }
+    return render(request, 'app/login.html', param)
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'app/logout.html')
+
+@login_required
+def user_view(request):
+    user = request.user
+
+    params = {
+        'user': user
+    }
+
+    return render(request, 'app/user.html', params)
+
+@login_required
+def other_view(request):
+    users = User.objects.exclude(username=request.user.username)
+
+    params = {
+        'users': users
+    }
+
+    return render(request, 'app/other.html', params)
+
+class UserChangeView(LoginRequiredMixin, FormView):
+    template_name = 'registration/change.html'
+    form_class = UserChangeForm
+    success_url = reverse_lazy("user")
+
+    def form_valid(self, form):
+        # form の update メソッドにログインユーザーを渡して変更
+        form.update(user=self.request.user)
+        return super().form_valid(form)
