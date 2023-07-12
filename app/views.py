@@ -1,14 +1,16 @@
+from typing import Any, Dict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http.response import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, CreateView, FormView, View
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Post
-from .forms import PostForm, SignUpForm, LoginForm, UserChangeForm
+from .forms import PostForm, SignUpForm, LoginForm, UsernameChangeForm
 
 def post_new(request):
     if request.method == "POST":
@@ -118,12 +120,26 @@ def other_view(request):
 
     return render(request, 'app/other.html', params)
 
-class UserChangeView(LoginRequiredMixin, FormView):
-    template_name = 'registration/change.html'
-    form_class = UserChangeForm
-    success_url = reverse_lazy("user")
+class UsernameChangeView(View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        form = UsernameChangeForm()
+        context["form"] = form
+        return render(request, 'app/change_username.html', context)
 
-    def form_valid(self, form):
-        # form の update メソッドにログインユーザーを渡して変更
-        form.update(user=self.request.user)
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = UsernameChangeForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            user_obj = User.objects.get(username=request.user.username)
+            user_obj.username = username
+            user_obj.save()
+            messages.info(request, "usernameを変更しました。")
+
+            return redirect('user')
+        else:
+            context["form"] = form
+
+            return render(request,'app/change_username.html', context)

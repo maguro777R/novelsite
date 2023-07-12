@@ -14,5 +14,6 @@ urlpatterns = [
     path('account/profile/', views.post_list, name='post_list'),
     path('signup/', views.signup_view, name='signup'),
     path('user/', views.user_view, name='user'),
-    path('other/', views.other_view, name='other')
+    path('other/', views.other_view, name='other'),
+    path('change_username/', views.UsernameChangeView.as_view(), name='change_username')
 ]

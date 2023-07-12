@@ -19,17 +19,13 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
-class UserChangeForm(ModelForm):
+class UsernameChangeForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username"]
 
-        def __init__(self, username=None, *args, **kargs):
-            kargs.setdefault('label_suffix', '')
+        def __init__(self, *args, **kargs):
             super().__init__(*args, **kargs)
-            # ユーザーの更新前情報をフォームに挿入
-            if username:
-                self.fields['username'].widget.attrs['value'] = username
-
-        def update(self, user):
-            user.username = self.cleaned_data['username']
+            for field in self.fields.values():
+                field.widget.attrs['class'] = "form-control"
+                field.widget.attrs['placeholder'] = "150 characters or fewer. Letters, digits and @/./+/-/_ only."
