@@ -5,4 +5,7 @@
     <h1>{{user.username}}</h1>
     <p>アカウント作成日：{{user.date_joined}}</p>
     <a class="ui button" href="{% url 'change_username' %}">登録情報変更</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'delete' user.username %}">退会</a>
+    {% endif %}
 {% endblock %}

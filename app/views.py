@@ -1,13 +1,13 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http.response import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView, View
+from django.views.generic import TemplateView, CreateView, FormView, View, DeleteView
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm, SignUpForm, LoginForm, UsernameChangeForm
@@ -143,3 +143,17 @@ class UsernameChangeView(View):
             context["form"] = form
 
             return render(request,'app/change_username.html', context)
+        
+class OnlyYouMixin(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        return user.username == self.kwargs['username'] or user.is_superuser
+    
+class UserDeleteView(OnlyYouMixin, DeleteView):
+    template_name = "app/delete.html"
+    success_url = reverse_lazy("login")
+    model = User
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
