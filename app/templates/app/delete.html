@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        退会
+      </h1>
+    </div>
+  </div>
+</section>
+
+<form role="form" action="" method="post">
+  {% csrf_token %}
+    {{ form.as_p }}
+    <p>あなたのアカウントを、本当に削除してもよろしいですか？</p>
+
+  <button type="submit" class="button is-danger">削除</button>
+  <a href="/" class="button is-text">キャンセル</a>
+</form>
+{% endblock %}
