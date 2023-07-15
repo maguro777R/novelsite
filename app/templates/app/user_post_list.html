@@ -2,7 +2,7 @@
 
 {% block content %}
     {% for post in posts %}
-        {% if post.status == "published" or user.is_superuser %}
+        {% if post.sakusya == user.username %}
             <div class="post">
                 <div class="date">
                     <p>published: {{ post.published_date }}</p>

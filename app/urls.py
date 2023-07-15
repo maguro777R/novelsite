@@ -17,4 +17,6 @@ urlpatterns = [
     path('other/', views.other_view, name='other'),
     path('change_username/', views.UsernameChangeView.as_view(), name='change_username'),
     path('<str:username>/delete/', views.UserDeleteView.as_view(), name='delete'),
+    path('user_post_list/', views.user_post_list, name='user_post_list'),
+    path('post/<int:pk>/delete_post/', views.delete_post, name='delete_post'),
 ]

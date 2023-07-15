@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm, SignUpForm, LoginForm, UsernameChangeForm
@@ -157,3 +158,13 @@ class UserDeleteView(OnlyYouMixin, DeleteView):
     model = User
     slug_field = 'username'
     slug_url_kwarg = 'username'
+
+def user_post_list(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    return render(request, 'app/user_post_list.html', {'posts': posts})
+
+@require_POST
+def delete_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('user_post_list')
