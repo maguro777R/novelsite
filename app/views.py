@@ -2,12 +2,13 @@ from typing import Any, Dict, Optional
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http.response import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView, View, DeleteView
+from django.views.generic import TemplateView, CreateView, FormView, View, DeleteView, ListView
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
 from .models import Post
@@ -27,7 +28,7 @@ def post_new(request):
     return render(request, 'app/post_edit.html', {'form': form})
 
 def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'app/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
@@ -168,3 +169,25 @@ def delete_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('user_post_list')
+
+def get_queryset(self):
+    try:
+        q = self.request.GET["searth"]
+    except:
+        q = None
+    return Post.objects.search(query=q)
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        query = self.request.GET
+
+        if q := query.get('q'):
+            queryset = queryset.filter(title__icontains=q)
+        else:
+            queryset = Post.objects.all()
+        return queryset.order_by('-published_date')

@@ -23,7 +23,12 @@
             <div>ブックマーク</div>
             <div>閲覧履歴</div>
             <div>ランキング</div>
-            <div>作品検索</div>
+            <div>
+              <form class="d-flex" action="{% url 'search' %}" method="get">
+                <input name="q" class="form-control me-2" type="search" placeholder="search" aria-label="search">
+                <button class="btn btn-outline-primary" type="submit">作品検索</button>
+              </form>
+            </div>
             <div>作品投稿</div>
             {% if user.is_authenticated %}
               <div>{{ user.username }}さんがログイン中です</div>

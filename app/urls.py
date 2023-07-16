@@ -11,7 +11,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('oauth/', include('social_django.urls', namespace='social')),
-    path('account/profile/', views.post_list, name='post_list'),
     path('signup/', views.signup_view, name='signup'),
     path('user/', views.user_view, name='user'),
     path('other/', views.other_view, name='other'),
@@ -19,4 +18,5 @@ urlpatterns = [
     path('<str:username>/delete/', views.UserDeleteView.as_view(), name='delete'),
     path('user_post_list/', views.user_post_list, name='user_post_list'),
     path('post/<int:pk>/delete_post/', views.delete_post, name='delete_post'),
+    path('search/', views.PostListView.as_view(), name='search'),
 ]
