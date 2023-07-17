@@ -17,7 +17,7 @@ class Post(models.Model):
     text = models.TextField(max_length=70000)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
-    updated_date = models.DateField(auto_now=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     def publish(self):

@@ -30,6 +30,9 @@
               </form>
             </div>
             <div>作品投稿</div>
+            <div>
+              <a href="{% url 'notice' %}">お知らせ</a>
+            </div>
             {% if user.is_authenticated %}
               <div>{{ user.username }}さんがログイン中です</div>
               <a href="{% url 'logout' %}">ログアウト</a>

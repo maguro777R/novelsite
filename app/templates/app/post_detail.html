@@ -4,7 +4,9 @@
     <div class="post">
       {% if post.published_date %}
         <div class="date">
-          <p>{{ post.published_date }}</p>
+          <p>created: {{ post.created_date }}</p>
+          <p>published: {{ post.published_date }}</p>
+          <p>updated: {{ post.updated_date }}</p>
         </div>
       {% endif %}
       {% if user.is_superuser or post.sakusya == user.username %}

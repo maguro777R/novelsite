@@ -19,4 +19,5 @@ urlpatterns = [
     path('user_post_list/', views.user_post_list, name='user_post_list'),
     path('post/<int:pk>/delete_post/', views.delete_post, name='delete_post'),
     path('search/', views.PostListView.as_view(), name='search'),
+    path('notice/', views.NoticeListView.as_view(), name='notice'),
 ]

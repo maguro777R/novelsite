@@ -20,7 +20,9 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.sakusya = User.objects.get(username=request.user.username)
             post.published_date = timezone.now()
+            post.updated_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)
     else:
@@ -28,7 +30,7 @@ def post_new(request):
     return render(request, 'app/post_edit.html', {'form': form})
 
 def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    posts = Post.objects.exclude(sakusya__contains="unnei").filter(published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'app/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
@@ -42,7 +44,7 @@ def post_edit(request, pk):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
+            post.updated_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)
     else:
@@ -114,7 +116,7 @@ def user_view(request):
 
 @login_required
 def other_view(request):
-    users = User.objects.exclude(username=request.user.username)
+    users = User.objects.exclude(username=request.user.username).exclude(username="unnei")
 
     params = {
         'users': users
@@ -170,13 +172,6 @@ def delete_post(request, pk):
     post.delete()
     return redirect('user_post_list')
 
-def get_queryset(self):
-    try:
-        q = self.request.GET["searth"]
-    except:
-        q = None
-    return Post.objects.search(query=q)
-
 class PostListView(ListView):
     model = Post
     template_name = 'post_list.html'
@@ -187,7 +182,23 @@ class PostListView(ListView):
         query = self.request.GET
 
         if q := query.get('q'):
-            queryset = queryset.filter(title__icontains=q)
+            queryset = queryset.filter(Q(title__icontains=q)|Q(text__icontains=q))
+            queryset = queryset.exclude(sakusya__contains="unnei")
         else:
             queryset = Post.objects.all()
+            queryset = queryset.exclude(sakusya__contains="unnei")
+        return queryset.order_by('-published_date')
+    
+class NoticeListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        queryset = queryset.filter(sakusya__contains="unnei")
+        query = self.request.GET
+
+        if q := query.get('q'):
+            queryset = queryset.filter(Q(title__icontains=q)|Q(text__icontains=q))
         return queryset.order_by('-published_date')

@@ -9,6 +9,11 @@
         <div class="ui segment">
             <div class="content">
                 <div class="header"><h3>ユーザー情報の変更</h3></div>
+                <div>
+                    ユーザー名を変更するとこれまで執筆してきた作品の変更ができなくなります。
+                    <br>また、同じユーザー名で登録するユーザーが現れた場合、そのユーザーに変更される可能性があります。
+                    <br>それでもよろしい場合、ユーザー名を変更してください。
+                </div>
                 <form class="ui form" action="" method="POST">
                     {% csrf_token %}
                     {{form.as_p}}

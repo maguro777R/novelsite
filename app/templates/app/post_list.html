@@ -5,7 +5,6 @@
         {% if post.status == "published" or user.is_superuser %}
             <div class="post">
                 <div class="date">
-                    <p>published: {{ post.published_date }}</p>
                     <p>updated: {{ post.updated_date }}</p>
                 </div>
                 <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
