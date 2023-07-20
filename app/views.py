@@ -202,3 +202,7 @@ class NoticeListView(ListView):
         if q := query.get('q'):
             queryset = queryset.filter(Q(title__icontains=q)|Q(text__icontains=q))
         return queryset.order_by('-published_date')
+    
+def terms(request):
+    return render(request, 'app/terms.html')
+          
