@@ -13,7 +13,10 @@
                 {{ field.errors }}
                 <br>
             {% endfor %}
-            <button type="submit">登録</button>
+            <div>
+                <p><a href="{% url 'terms' %}">利用規約</a>を必ずお読みください。</p>
+            </div>
+            <p>利用規約に同意した上で<button type="submit">登録</button></p>
         </form>
     </div>
 </div>

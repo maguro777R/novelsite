@@ -21,4 +21,5 @@ urlpatterns = [
     path('search/', views.PostListView.as_view(), name='search'),
     path('notice/', views.NoticeListView.as_view(), name='notice'),
     path('terms/', views.terms, name='terms'),
+    path('category/<str:category>/', views.category, name='category'),
 ]

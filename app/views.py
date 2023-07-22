@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
-from .models import Post
+from .models import Post, Category
 from .forms import PostForm, SignUpForm, LoginForm, UsernameChangeForm
 
 def post_new(request):
@@ -206,3 +206,8 @@ class NoticeListView(ListView):
 def terms(request):
     return render(request, 'app/terms.html')
           
+def category(request, category):
+    category = Category.objects.get(name=category)
+    posts = Post.objects.filter(category=category)
+    return render(request, 'app/post_list.html',
+                  {'category': category, 'posts': posts})

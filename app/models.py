@@ -5,6 +5,13 @@ from django.db.models.query import QuerySet
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+
+class Category(models.Model):
+    name = models.CharField('カテゴリー', max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -19,6 +26,10 @@ class Post(models.Model):
     published_date = models.DateTimeField(blank=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    category = models.ForeignKey(
+        Category, verbose_name='カテゴリー',
+        on_delete=models.PROTECT
+    )
 
     def publish(self):
         self.published_date = timezone.now()
