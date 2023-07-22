@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
-from .models import Post, Category
+from .models import Post, Category, Tag
 from .forms import PostForm, SignUpForm, LoginForm, UsernameChangeForm
 
 def post_new(request):
@@ -211,3 +211,8 @@ def category(request, category):
     posts = Post.objects.filter(category=category)
     return render(request, 'app/post_list.html',
                   {'category': category, 'posts': posts})
+
+def tag(request, tag):
+    tag = Tag.objects.get(name=tag)
+    posts = Post.objects.filter(tag=tag)
+    return render(request, 'app/post_list.html', {'tag':tag, 'posts': posts})

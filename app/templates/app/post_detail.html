@@ -2,13 +2,6 @@
 
 {% block content %}
     <div class="post">
-      {% if post.published_date %}
-        <div class="date">
-          <p>created: {{ post.created_date }}</p>
-          <p>published: {{ post.published_date }}</p>
-          <p>updated: {{ post.updated_date }}</p>
-        </div>
-      {% endif %}
       {% if user.is_superuser or post.sakusya == user.username %}
         <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
         <form method="POST" action="{% url 'delete_post' pk=post.pk %}">
@@ -19,4 +12,19 @@
       <h2>{{ post.title }}</h2>
       <p>{{ post.text|linebreaksbr }}</p>
     </div>
+    {% if post.published_date %}
+    <div class="date">
+      <p>created: {{ post.created_date }}</p>
+      <p>published: {{ post.published_date }}</p>
+      <p>updated: {{ post.updated_date }}</p>
+    </div>
+  {% endif %}
+    <p>関連作品</p>
+    {% if post.relation.all %}
+      {% for post in post.relation.all %}
+        <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+      {% endfor %}
+    {% else %}
+      <p>ありません</p>
+    {% endif %}
 {% endblock %}

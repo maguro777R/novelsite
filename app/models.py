@@ -11,6 +11,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Tag(models.Model):
+    name = models.CharField('タグ', max_length=59)
+
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -20,16 +26,18 @@ class Post(models.Model):
 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     sakusya = models.CharField(max_length=100, null=True)
-    title = models.CharField(max_length=100)
-    text = models.TextField(max_length=70000)
-    created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField(blank=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    title = models.CharField(max_length=100, verbose_name='タイトル')
+    text = models.TextField(max_length=70000, verbose_name='本文')
+    created_date = models.DateTimeField(default=timezone.now, verbose_name='作成日')
+    published_date = models.DateTimeField(blank=True, null=True, verbose_name='公開日')
+    updated_date = models.DateTimeField(auto_now=True, null=True, verbose_name='更新日')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft', verbose_name='公開状態')
     category = models.ForeignKey(
         Category, verbose_name='カテゴリー',
         on_delete=models.PROTECT
     )
+    tag = models.ManyToManyField(Tag, verbose_name='タグ', blank=True, null=True)
+    relation = models.ManyToManyField('self', verbose_name='関連', blank=True, null=True)
 
     def publish(self):
         self.published_date = timezone.now()

@@ -9,7 +9,7 @@ class PostForm(forms.ModelForm):
     
     class Meta:
         model = Post
-        fields = ('title', 'text', 'status',)
+        fields = ('title', 'text', 'status', 'category',)
 
 class SignUpForm(UserCreationForm):
     class Meta:

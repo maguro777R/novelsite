@@ -56,6 +56,9 @@
             {% if category %}
               <h3>カテゴリー:{{ category }}</h3>
             {% endif %}
+            {% if tag %}
+              <h3>タグ:{{ tag }}</h3>
+            {% endif %}
         </nav>   
 
         <main>
@@ -68,6 +71,18 @@
                 </div>
             </div>
         </main>
+
+        <div>
+          <p>タグ</p>
+          {% for tag in tag_list %}
+            <a href="{% url 'tag' tag %}">
+              <p style='float: left; margin-right: 5px;'>
+                {{ tag.name }}
+              </p>
+            </a>
+        </div>
+        {% endfor %}
+        <br><br>
         
         <footer>
             <div>このサイトについて</div>
