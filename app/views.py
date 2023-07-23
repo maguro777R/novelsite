@@ -174,7 +174,7 @@ def delete_post(request, pk):
 
 class PostListView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'app/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self, **kwargs):
@@ -191,12 +191,26 @@ class PostListView(ListView):
     
 class NoticeListView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'app/notice_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
-        queryset = queryset.filter(sakusya__contains="unnei")
+        queryset = queryset.filter(sakusya__contains="unnei", title__icontains="お知らせ")
+        query = self.request.GET
+
+        if q := query.get('q'):
+            queryset = queryset.filter(Q(title__icontains=q)|Q(text__icontains=q))
+        return queryset.order_by('-published_date')
+    
+class HelpListView(ListView):
+    model = Post
+    template_name = 'app/help_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        queryset = queryset.filter(sakusya__contains="unnei", title__icontains="ヘルプ")
         query = self.request.GET
 
         if q := query.get('q'):

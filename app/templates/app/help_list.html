@@ -1,7 +1,14 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-    <h2>投稿作品</h2>
+  <h2>ヘルプ</h2>
+  <p>ヘルプ内検索</p>
+  <div>
+    <form class="d-flex" action="{% url 'help_search' %}" method="get">
+      <input name="q" class="form-control me-2" type="search" placeholder="search" aria-label="search">
+      <button class="btn btn-outline-primary" type="submit">検索</button>
+    </form>
+  </div>
     {% for post in posts %}
         {% if post.status == "published" or user.is_superuser %}
             <div class="post">
