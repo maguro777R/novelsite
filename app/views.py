@@ -163,7 +163,7 @@ class UserDeleteView(OnlyYouMixin, DeleteView):
     slug_url_kwarg = 'username'
 
 def user_post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'app/user_post_list.html', {'posts': posts})
 
 @require_POST
