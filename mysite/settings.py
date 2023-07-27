@@ -25,7 +25,7 @@ SECRET_KEY = '753_5nngui1tk^^3rv+*w7au_f9c3=g0@@#6x--ljm12$2a67-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'nove.lolipop.io']
+ALLOWED_HOSTS = ['127.0.0.1', '*']
 
 
 # Application definition
